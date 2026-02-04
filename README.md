@@ -1,48 +1,72 @@
-# CERINTA
-Crearea unui tabel cu pozitiile concurentiilor, in urma obtinerii rezultatelor.
-Acest program primeste ca date de intrare informatiile prinvind fiecare concurent, respectiv numele, prenumele si punctajul acestuia.  
-Rezultatul final va putea fi vizualizat intr-un fisier Excell, care se va numi "tabelConcurenti.xlt".
+# 🏆 Ranking System & Excel Exporter (C Implementation)
 
-# PRINCIPALELE STRUCTURI UTILIZATE
+[![C Language](https://img.shields.io/badge/Language-C-00599C?style=flat&logo=c&logoColor=white)](https://en.wikipedia.org/wiki/C_(programming_language))
+[![Data Structures](https://img.shields.io/badge/Focus-Linked%20Lists-orange?style=flat)]()
 
-typedef struct {    
-  char *nume, *prenume;             
-  unsigned int punctaj;         
-} concurent; 
+**Ranking System** este o aplicație dezvoltată în limbajul C concepută pentru a gestiona baze de date cu participanți, a-i organiza în funcție de performanță și a genera un raport tabelar compatibil cu Excel (format `.xlt`).
 
-typedef struct a{
-    concurent x;
-    struct a *next;
-} clasament;
+## 🚀 Funcționalități Principală
 
-In concurs sunt inscrisi mai multi concurenti, despre care se stiu numele, prenumele si punctajul obtinut de catre acesta. Pentru a se crea clasamentul, se va utiliza tipul clasament, astfel aici se vor retine concurentii, care au acelasi punctaj.  
-Acestea fiind principalele structuri utilizate.
+* **Gestiune Dinamică**: Utilizatorul poate introduce un număr nelimitat de concurenți, memoria fiind gestionată dinamic pentru nume și prenume.
+* **Organizare pe Niveluri (Clasament)**: Aplicația grupează automat concurenții care au același punctaj.
+* **Ordonare Automată**: Sistemul inserează noii participanți direct în poziția corectă din punct de vedere al punctajului (ordine descrescătoare), utilizând liste înlănțuite imbricate.
+* **Export Tabelar**: Generează un fișier de tip "tab-separated values" cu extensia `.xlt`, permițând vizualizarea ierarhică a locurilor ocupate (Locul 1, Locul 2 etc.) într-un format de tip coloane.
+* **Validare Date**: Include verificări pentru integritatea numelor (fără spații, lungime minimă) și a punctajelor.
 
-# FUNCTIA MAIN
-In main se produc toate operatiile necesare rezolvarii acestui program.
-> citirea datelor despre fiecare cocncurent si salvarea acestora intr-un clasament
-> afisarea in tabel a concurentiilor
-> eliberarea memoriei utilizate de catre program
 
-# BIBLIOTECA
-Este utilizata o singura biblioteca "excellLib.h", care contine, atat toatre structurile necesare, cat si includerea bibliotecilor necesare, precum <stdio.h>, <stdlib.h> si <string.h>.  
-De asemenea, aici sunt declarate toate functiile create, care prelucreaza citirea sirurilor de caractere si gestionarea concurentiilor.
 
-# TASK
-Porgramul primeste de la tastatura informatiile privind fiecare concurent in parte, respectiv numele si prenumele, care sunt percepute ca niste cuvinte, in cazul, in care utilizatorul incearca sa introduca spatii in sir, acesta va fi pus sa reintroduca sirul, dar si punctajul obtinut.
+---
 
-!! FUNCTIILE PENTRU CITIRE -> create.c
-!! FUNCTIILE PENTRU GESTIONAREA CONCURENTILOR -> functiList.c
+## 🏛️ Arhitectura Datelor
 
-Pentru o usoara gestiune a datelor, concurentii sunt retinuti intr-o lista comuna, in ordine descrescatoare a punctajului obtinut. Lista, care este vazuta un element al unei liste mai mari, care ierarhizeaza listele cu concurenti, dupa punctaje, 2concurenti, care au obtinut acelasi punctaj se vor afla in aceeasi lista.  
-In acest mod, la finalizarea citirii, este creat clasamentul final.
-> CONCURENTI - CLASAMENT - TOP
+Aplicația se bazează pe o structură de date de tip **Listă de Liste**:
 
-Output: ![image](https://github.com/user-attachments/assets/e7b7b7cf-1134-4f5d-8729-51e2870dae42)
+1. **Structura `concurent`**: Reține datele individuale (Nume, Prenume, Punctaj).
+2. **Structura `clasament`**: O listă simplu înlănțuită ce grupează concurenții cu același punctaj.
+3. **Structura `List` (BigList)**: O listă principală unde fiecare nod reprezintă un punctaj unic și conține o referință către lista de concurenți aferentă acelui scor.
 
-Pentru a realiza aceasta formatare in Excell, fara utilizarea unei biblioteci specializate, tabelul va fi construit pe linii.  
-Prima linie. Numar Locul 1 Locul 2 ... Locul n  
-A doua linie. Nume Prenume Punctaj Nume ... Nume Prenume Punctaj  
-A treia linie - Ultima linie. Informatiile concurentiilor (clasamentul propriu-zis)
 
-Concurentii vor fi ordonati descrescator dupa punctaj, de la stanga la dreapta, iar pe coloane vor aparea toti concurentii, care au acelasi punctaj obtinut, astfel in timpul afisarii se va parcurge intreaga lista, dar la o iteratie se vor afisa cate un concurent din fiecare lista, daca aexista, altfel se va afisa - - -.
+
+---
+
+## 🛠️ Structura Proiectului
+
+* `main.c`: Coordonatorul aplicației; gestionează bucla de citire și funcția de export/afișare a tabelului final.
+* `excellLib.h`: Header-ul care definește structurile de date și prototipurile funcțiilor pentru modularizare.
+* `create.c`: Conține logica pentru citirea dinamică a șirurilor de caractere și validarea datelor de intrare.
+* `functList.c`: Implementarea algoritmilor de inserare ordonată, gestionarea nodurilor de clasament și eliberarea memoriei.
+
+---
+
+## ⚙️ Instalare și Rulare
+
+1. **Compilare**:
+   Utilizați un compilator C (precum GCC) pentru a asambla modulele:
+   ```bash
+   gcc -o clasament main.c create.c functList.c -I clasment
+   ```
+2. **Executie:**
+   ```bash
+   ./clasment
+   ```
+   
+---
+## 🚀 Utilizare
+
+Pentru a genera clasamentul, urmați acești pași în interfața consolei:
+
+1. **Introducere Date**: Introduceți numărul total de concurenți.
+2. **Completare Profil**: Pentru fiecare participant, completați datele solicitate (Nume, Prenume, Punctaj).
+3. **Generare Raport**: La finalizarea introducerii datelor, programul va genera automat fișierul `tabelConcurenti.xlt` în directorul curent.
+
+---
+
+## 📂 Exemplu de Output (tabelConcurenti.xlt)
+
+Fișierul generat utilizează delimitarea prin Tab, permițând deschiderea directă în Microsoft Excel sau în orice editor de text. Structura tabelului va arăta astfel:
+
+| Numar | Locul 1 | | | Locul 2 | | |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| | **Nume** | **Prenume** | **Punctaj** | **Nume** | **Prenume** | **Punctaj** |
+| **1.** | Ionescu | Ana | 100 | Popescu | Dan | 95 |
+| **2.** | Vasilescu | Ion | 100 | | | |
